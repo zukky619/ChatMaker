@@ -1,0 +1,50 @@
+.yourvoice {
+  display: inline-block;
+  position: relative;
+  margin-top: 10px;
+  margin-left: 60px;
+  padding: 10px;
+  max-width: 250px;
+  border-radius: 12px;
+  background: #edf1ee;
+}
+
+.yourvoice:after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 3px;
+  left: -19px;
+  border: 8px solid transparent;
+  border-right: 18px solid #edf1ee;
+  -webkit-transform: rotate(35deg);
+  transform: rotate(35deg);
+}
+
+.myvoice {
+  justify-content: flex-end;
+  margin-top: 10px;
+  margin-right: 60px;
+}
+
+.myvoice p {
+  display: inline-block;
+  position: relative;
+  padding: 8px;
+  max-width: 250px;
+  border-radius: 12px;
+  background: #36c55a;
+  font-size: 15px;
+}
+
+.myvoice p:after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  /* 右側の位置を調整 */
+  right: -19px;
+  border: 8px solid transparent;
+  border-left: 18px solid #36c55a;
+  -webkit-transform: rotate(-35deg);
+  transform: rotate(-35deg);
+}

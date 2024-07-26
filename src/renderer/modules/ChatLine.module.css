@@ -1,0 +1,13 @@
+.line {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin: 7px 0;
+}
+
+.yourline {
+}
+
+.myline {
+  justify-content: flex-end;
+}
