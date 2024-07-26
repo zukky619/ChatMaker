@@ -23,3 +23,15 @@ export const voicebox_res_play = (arrayBuffer: ArrayBuffer) => {
     };
   });
 };
+
+export const get_file_url = (file: File) => {
+  let reader: FileReader | null = new FileReader();
+  reader.onloadend = () => {
+    // base64のimageUrlを生成する。
+    const base64 = reader && reader.result;
+    if (base64 && typeof base64 === 'string') {
+      return base64;
+    }
+  };
+  reader.readAsDataURL(file);
+};

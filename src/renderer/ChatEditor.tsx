@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { fetch_voicebox } from './apis/voicebox';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { messagesState } from './states/messagesState';
+import { thumnailsState } from './states/thumnailsState';
 import ImageRegister from './modules/ImageRegister';
 
 type Props = {
@@ -10,22 +11,10 @@ type Props = {
 
 const ChatEditor = (props: Props) => {
   const [messages, setMessages] = useRecoilState(messagesState);
+  const [thumnails, setThumnails] = useRecoilState(thumnailsState);
 
   const click_handler = async () => {
-    const fetched_res = fetch_voicebox('こんにちは', 'man');
-
-    fetched_res.then((arrayBuffer) => {
-      // Blobに変換
-      const audioBlob = new Blob([arrayBuffer], { type: 'audio/x-wav' });
-      // URLに変換
-      const audioUrl = URL.createObjectURL(audioBlob);
-      // 音声作成
-      const audio = new Audio(audioUrl);
-      // 音量[0-1]設定
-      audio.volume = 1;
-      // 再生
-      audio.play();
-    });
+    console.log(thumnails);
   };
 
   const open_file = async () => {
@@ -46,6 +35,7 @@ const ChatEditor = (props: Props) => {
       </div>
       <div>
         <ImageRegister person="me" />
+        <ImageRegister person="A" />
       </div>
     </>
   );

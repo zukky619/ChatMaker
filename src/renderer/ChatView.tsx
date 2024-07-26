@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ChatLine from './modules/ChatLine';
 import { MessageInfo } from './types/messageInfo';
 import ChatViewStyle from './ChatView.module.css';
@@ -9,9 +9,15 @@ type Props = {
 };
 
 const ChatView = (props: Props) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  }, [props.index]);
+
   return (
     <>
-      <div className={ChatViewStyle.content}>
+      <div className={ChatViewStyle.content} ref={containerRef}>
         {props.messages
           .filter((value) => {
             return value.id <= props.index;

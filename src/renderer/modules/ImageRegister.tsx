@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { thumnailsState } from '../states/thumnailsState';
 import InputImage from './InputImage';
 import { useGetImageUrl } from '../hooks/useGetImageUrl';
 
@@ -6,11 +8,22 @@ type Props = {
   person: string;
 };
 
-const FIELD_SIZE = 40;
-
 const ImageRegister = (props: Props) => {
+  const FIELD_SIZE = 40;
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [thumnails, setThumnails] = useRecoilState(thumnailsState);
+
+  useEffect(() => {
+    let newThumnails = { ...thumnails };
+    newThumnails[props.person] = imageUrl;
+    console.log(props.person, imageUrl, newThumnails);
+    setThumnails(newThumnails);
+  }, [imageFile]);
+
+  // state (imageFile)が更新されたら、画像URLを作成する。
+  const imageUrl = useGetImageUrl({ key: props.person, file: imageFile });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget?.files && e.currentTarget.files[0]) {
@@ -27,15 +40,12 @@ const ImageRegister = (props: Props) => {
     }
   };
 
-  // state (imageFile)が更新されたら、画像URLを作成する。
-  const { imageUrl } = useGetImageUrl({ file: imageFile });
-
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <label>{props.person}</label>
       <div style={{ position: 'relative' }}>
         <label
-          htmlFor="aaa"
+          htmlFor={`${props.person}InputImage`}
           style={{
             border: 'gray 2px dotted',
             width: FIELD_SIZE,
@@ -59,7 +69,11 @@ const ImageRegister = (props: Props) => {
             'Image'
           )}
           {/* ダミーインプット: 見えない */}
-          <InputImage ref={fileInputRef} id="aaa" onChange={handleFileChange} />
+          <InputImage
+            ref={fileInputRef}
+            id={`${props.person}InputImage`}
+            onChange={handleFileChange}
+          />
         </label>
         {imageUrl && imageFile ? (
           <div

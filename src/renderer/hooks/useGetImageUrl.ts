@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { thumnailsState } from '../states/thumnailsState';
 
 type Args = {
+  key: string;
   file: File | null;
 };
 
-export const useGetImageUrl = ({ file }: Args) => {
-  const [imageUrl, setImageUrl] = useState('');
+export const useGetImageUrl = ({ key, file }: Args) => {
+  const [thumnails, setThumnails] = useRecoilState(thumnailsState);
 
   useEffect(() => {
     if (!file) {
@@ -17,7 +20,7 @@ export const useGetImageUrl = ({ file }: Args) => {
       // base64のimageUrlを生成する。
       const base64 = reader && reader.result;
       if (base64 && typeof base64 === 'string') {
-        setImageUrl(base64);
+        setThumnails({ ...thumnails, [key]: base64 });
       }
     };
     reader.readAsDataURL(file);
@@ -27,7 +30,5 @@ export const useGetImageUrl = ({ file }: Args) => {
     };
   }, [file]);
 
-  return {
-    imageUrl,
-  };
+  return file === null ? undefined : thumnails[key];
 };
