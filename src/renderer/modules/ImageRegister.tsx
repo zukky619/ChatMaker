@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ImageRegister = (props: Props) => {
-  const FIELD_SIZE = 40;
+  const FIELD_SIZE = 160;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -42,7 +42,6 @@ const ImageRegister = (props: Props) => {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <label>{props.person}</label>
       <div style={{ position: 'relative' }}>
         <label
           htmlFor={`${props.person}InputImage`}

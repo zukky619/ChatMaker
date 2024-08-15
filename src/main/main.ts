@@ -9,7 +9,16 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  dialog,
+  desktopCapturer,
+  session,
+  webContents,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -70,7 +79,7 @@ const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
-  require('electron-debug')();
+  require('electron-debug')({ showDevTools: false });
 }
 
 const installExtensions = async () => {
@@ -163,5 +172,22 @@ app
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
     });
+    session.defaultSession.setDisplayMediaRequestHandler(
+      (request, callback) => {
+        console.log('Search for request === ', request);
+        console.log(
+          webContents.getAllWebContents().forEach((wc) => console.log(wc)),
+        );
+        desktopCapturer.getSources({ types: ['window'] }).then((sources) => {
+          console.log('Search for sources === ', sources);
+          for (const source of sources) {
+            if (source.name == 'Chat Maker') {
+              // Grant access to the first screen found.
+              callback({ video: source, audio: 'loopback' });
+            }
+          }
+        });
+      },
+    );
   })
   .catch(console.log);

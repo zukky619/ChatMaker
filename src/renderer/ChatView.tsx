@@ -12,7 +12,9 @@ const ChatView = (props: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    if (containerRef.current !== null) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }, [props.index]);
 
   return (

@@ -1,0 +1,49 @@
+.root {
+  --size: 1em;
+}
+
+.video_play_pause {
+  display: inline-block;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  border: calc(var(--size) * 0.05) solid currentColor;
+  border-radius: 50%;
+  color: #000;
+  font-size: 200px;
+}
+
+.video_play_pause > input {
+  display: none;
+}
+
+.video_play_pause > input:not(:checked) + span::before {
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translateY(-50%);
+  width: 0px;
+  height: 0px;
+  border: calc(var(--size) * 0.3) solid transparent;
+  border-left: calc(var(--size) * 0.5) solid currentColor;
+  box-sizing: border-box;
+  content: '';
+}
+
+.video_play_pause > input:checked + span::before,
+.video_play_pause > input:checked + span::after {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: calc(var(--size) * 0.1);
+  height: calc(var(--size) * 0.5);
+  box-sizing: border-box;
+  background-color: currentColor;
+  content: '';
+}
+.video_play_pause > input:checked + span::before {
+  left: 40%;
+}
+.video_play_pause > input:checked + span::after {
+  left: 60%;
+}
