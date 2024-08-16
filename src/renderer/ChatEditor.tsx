@@ -4,8 +4,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { messagesState } from './states/messagesState';
 import { thumnailsState } from './states/thumnailsState';
 import { peoplesState } from './states/peoplesState';
-import ImageRegister from './modules/ImageRegister';
-import PlayButton from './modules/playButton';
 import PeopleSelector from './modules/PeopleSelector';
 
 import videoButtons from 'assets/video_buttons.png';
@@ -66,7 +64,13 @@ const ChatEditor = (props: Props) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 'calc(100vw - 56.25vh)',
+      }}
+    >
       <div
         style={{
           width: '100%',
@@ -77,17 +81,6 @@ const ChatEditor = (props: Props) => {
           gap: '1rem',
         }}
       >
-        {/* <div
-          onClick={click_handler}
-          style={{
-            borderRadius: '100px',
-            border: 'gray 1px solid',
-          }}
-        >
-          再生
-        </div> */}
-
-        {/* <PlayButton /> */}
         <button
           onClick={props.start}
           style={{
@@ -128,10 +121,6 @@ const ChatEditor = (props: Props) => {
         </button>
         <button onClick={open_file}>ファイルを開く</button>
       </div>
-      {/* <div>
-        <ImageRegister person="me" />
-        <ImageRegister person="A" />
-      </div> */}
       <div>
         <label>People Settings</label>
       </div>

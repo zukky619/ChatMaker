@@ -1,25 +1,12 @@
 import React, { useState } from 'react';
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import { useRecoilState } from 'recoil';
 import PeopleCard from './PeopleCard';
 import { peopleInfo } from '../types/peopleInfo';
-
-const itemCount = 5;
-const copyCount = 2;
-
-const itemNumbers = [...Array(itemCount)].map((_, i) => i + 1);
-const copiedItemsBefore = itemNumbers.slice(itemCount - copyCount).map((n) => {
-  return { n: n, isCopy: true };
-});
-const copiedItemsAfter = itemNumbers.slice(0, copyCount).map((n) => {
-  return { n, isCopy: true };
-});
-const items = itemNumbers.map((n) => {
-  return { n, isCopy: false };
-});
+import { peoplesState } from '../states/peoplesState';
 
 type ItemProps = {
   person: string;
+  voiceColor: string;
 };
 
 const Item = (props: ItemProps) => (
@@ -34,60 +21,101 @@ const Item = (props: ItemProps) => (
       margin: '20px',
     }}
   >
-    <PeopleCard person={props.person} />
-    {/* <span
-      // css={itemTextStyle(isCopy)}
-      style={{
-        width: '80%',
-        height: '80%',
-        backgroundColor: isCopy ? '#7fffd4' : '#ffb6c1',
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%,-50%)',
-      }}
-    >
-      {n}
-    </span> */}
+    <PeopleCard person={props.person} voiceColor={props.voiceColor} />
   </div>
 );
+
+type NewPeopleAdderProps = {
+  onClick: () => void;
+};
+
+const NewPeopleAdder = (props: NewPeopleAdderProps) => {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'inline-block',
+        position: 'relative',
+        margin: '20px',
+        verticalAlign: 'top',
+      }}
+      onClick={props.onClick}
+    >
+      <div
+        style={{
+          position: 'relative',
+          backgroundColor: '#cccccc',
+          borderRadius: '10px',
+          height: '264.33px',
+          color: 'white',
+          fontSize: '50px',
+          textAlign: 'center',
+          lineHeight: '264.33px',
+          boxShadow: '0 0 4px gray',
+        }}
+      >
+        <label>＋</label>
+      </div>
+    </div>
+  );
+};
 
 type Props = {
   peoples: peopleInfo[];
 };
 
 const PeopleSelector = (props: Props) => {
-  const [hasColor, setHasColor] = useState(true);
-  const toggleColor = () => setHasColor(!hasColor);
-  // const [peoples, setPeoples] = useState(['me', 'A']);
-
-  const allItems = copiedItemsBefore
-    .concat(items, copiedItemsAfter)
-    .map(({ n, isCopy }, i) => (
-      // <Item id={i.toString()} n={n} isCopy={isCopy && hasColor} />
-      <Item person={i.toString()} />
-    ));
-
   const [isTransition, setIsTransition] = useState(false);
   const [currentItem, setCurrentItem] = useState(0);
+  const [peoples, setPeoples] = useRecoilState(peoplesState);
+
+  const NewPeopleAddHandler = () => {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    if (alphabet.length <= peoples.length - 1) {
+      return;
+    }
+    setPeoples([
+      ...peoples,
+      {
+        id: alphabet[peoples.length - 1],
+        voiceColor: '#ffffff',
+      },
+    ]);
+    if (!isTransition) {
+      if (currentItem > 0) {
+        setIsTransition(true);
+        setCurrentItem(allItems.length - 1);
+      }
+    }
+  };
+
+  let allItems = props.peoples.map((people) => {
+    return <Item person={people.id} voiceColor={people.voiceColor} />;
+  });
+
+  allItems.push(<NewPeopleAdder onClick={NewPeopleAddHandler} />);
 
   const handlePrev = () => {
     if (!isTransition) {
-      setIsTransition(true);
-      setCurrentItem((n) => n - 1);
+      if (currentItem > 0) {
+        setIsTransition(true);
+        setCurrentItem((n) => n - 1);
+      }
     }
   };
 
   const handleNext = () => {
     if (!isTransition) {
-      setIsTransition(true);
-      setCurrentItem((n) => n + 1);
+      if (currentItem < allItems.length - 1) {
+        setIsTransition(true);
+        setCurrentItem((n) => n + 1);
+      }
     }
   };
 
   const handleTransitionEnd = () => {
     setIsTransition(false);
-    setCurrentItem((n) => (itemCount + n) % itemCount);
   };
 
   return (
@@ -125,10 +153,9 @@ const PeopleSelector = (props: Props) => {
         <div
           style={{
             width: 200,
-            // height: 100,
             whiteSpace: 'nowrap',
             margin: 'auto',
-            transform: `translate3d(${-100 * (currentItem + copyCount)}%, 0, 0)`,
+            transform: `translate3d(${-100 * (currentItem + 1)}%, 0, 0)`,
             ...(isTransition ? { transition: 'transform 1s' } : {}),
           }}
           onTransitionEnd={handleTransitionEnd}
@@ -160,36 +187,3 @@ const PeopleSelector = (props: Props) => {
 };
 
 export default PeopleSelector;
-
-const screenStyle = css({
-  width: 200,
-  overflow: 'hidden',
-});
-
-const itemContainerStyle = (n: number, isTransition: boolean) =>
-  css({
-    width: 100,
-    height: 100,
-    whiteSpace: 'nowrap',
-    margin: 'auto',
-    transform: `translate3d(${-100 * (n + copyCount)}%, 0, 0)`,
-    ...(isTransition ? { transition: 'transform 1s' } : {}),
-  });
-
-const itemStyle = css({
-  width: '100%',
-  height: '100%',
-  display: 'inline-block',
-  position: 'relative',
-});
-
-const itemTextStyle = (isCopy: boolean) =>
-  css({
-    width: '80%',
-    height: '80%',
-    backgroundColor: isCopy ? '#7fffd4' : '#ffb6c1',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%,-50%)',
-  });

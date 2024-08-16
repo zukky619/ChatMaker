@@ -6,11 +6,11 @@ export const peoplesState = atom({
   default: [
     {
       id: 'me',
-      voiceColor: 'white',
+      voiceColor: '#ffffff',
     },
     {
       id: 'A',
-      voiceColor: 'white',
+      voiceColor: '#ffffff',
     },
   ] as peopleInfo[],
 });
