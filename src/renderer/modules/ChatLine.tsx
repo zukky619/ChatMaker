@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatVoice from './ChatVoice';
+import LeftChatVoice from './ChatVoice';
 import ChatIcon from './ChatIcon';
 import { MessageInfo } from '../types/messageInfo';
 import ChatLineStyle from './ChatLine.module.css';
@@ -14,7 +14,7 @@ const ChatLine = (props: Props) => {
       className={`${ChatLineStyle.line} ${props.message.from == 'me' && ChatLineStyle.myline}`}
     >
       <ChatIcon message={props.message} />
-      <ChatVoice message={props.message} />
+      <LeftChatVoice message={props.message} />
     </div>
   );
 };

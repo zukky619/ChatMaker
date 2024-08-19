@@ -1,3 +1,7 @@
+:root {
+  --chat-voice-bg: #36c55a;
+}
+
 .yourvoice {
   display: inline-block;
   position: relative;
@@ -6,7 +10,7 @@
   padding: 10px;
   max-width: 250px;
   border-radius: 12px;
-  background: #edf1ee;
+  background: var(--chat-voice-bg);
 }
 
 .yourvoice:after {
@@ -16,7 +20,7 @@
   top: 3px;
   left: -19px;
   border: 8px solid transparent;
-  border-right: 18px solid #edf1ee;
+  border-right: 18px solid var(--chat-voice-bg);
   -webkit-transform: rotate(35deg);
   transform: rotate(35deg);
 }
@@ -33,7 +37,7 @@
   padding: 8px;
   max-width: 250px;
   border-radius: 12px;
-  background: #36c55a;
+  background: var(--chat-voice-bg);
   font-size: 15px;
 }
 
@@ -44,7 +48,7 @@
   /* 右側の位置を調整 */
   right: -19px;
   border: 8px solid transparent;
-  border-left: 18px solid #36c55a;
+  border-left: 18px solid var(--chat-voice-bg);
   -webkit-transform: rotate(-35deg);
   transform: rotate(-35deg);
 }

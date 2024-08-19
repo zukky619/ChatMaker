@@ -1,7 +1,14 @@
+.content::webkit-scrollbar {
+  display: none;
+}
+
 .content {
   background-color: darkslategray;
   width: 56.25vh;
   height: 100vh;
   overflow: auto;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IEとEdge用 */
+  scrollbar-width: none; /* Firefox用 */
 }

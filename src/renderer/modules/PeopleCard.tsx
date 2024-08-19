@@ -1,5 +1,7 @@
 import React from 'react';
 import ImageRegister from './ImageRegister';
+import { useRecoilState } from 'recoil';
+import { peoplesState } from '../states/peoplesState';
 
 type Props = {
   person: string;
@@ -7,6 +9,19 @@ type Props = {
 };
 
 const PeopleCard = (props: Props) => {
+  const [peoples, setPeoples] = useRecoilState(peoplesState);
+
+  const handlerChangeColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newPeoples = peoples.map((people) => {
+      if (people.id === props.person) {
+        return { ...people, voiceColor: e.target.value };
+      } else {
+        return people;
+      }
+    });
+    setPeoples(newPeoples);
+  };
+
   return (
     <div
       style={{
@@ -32,7 +47,11 @@ const PeopleCard = (props: Props) => {
         }}
       >
         <label>BG Color </label>
-        <input type="color" value={props.voiceColor}></input>
+        <input
+          type="color"
+          value={props.voiceColor}
+          onChange={handlerChangeColor}
+        ></input>
       </div>
     </div>
   );

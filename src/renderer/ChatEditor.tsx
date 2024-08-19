@@ -3,6 +3,8 @@ import { fetch_voicebox } from './apis/voicebox';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { messagesState } from './states/messagesState';
 import { thumnailsState } from './states/thumnailsState';
+import { messagesIndexState } from './states/messageIndexState';
+import { chatState } from './states/chatState';
 import { peoplesState } from './states/peoplesState';
 import PeopleSelector from './modules/PeopleSelector';
 
@@ -16,6 +18,8 @@ const ChatEditor = (props: Props) => {
   const [messages, setMessages] = useRecoilState(messagesState);
   const [thumnails, setThumnails] = useRecoilState(thumnailsState);
   const [peoples, setPeoples] = useRecoilState(peoplesState);
+  const [messageIndex, setMessageIndex] = useRecoilState(messagesIndexState);
+  const [chatStatus, setChatStatus] = useRecoilState(chatState);
 
   const click_handler = async () => {
     console.log(thumnails);
@@ -26,6 +30,7 @@ const ChatEditor = (props: Props) => {
       // eslint-disable-next-line no-console
       console.log(arg);
       setMessages(arg);
+      setMessageIndex(arg.length);
     });
     window.electron.ipcRenderer.sendMessage('open-csv', []);
   };
@@ -69,6 +74,7 @@ const ChatEditor = (props: Props) => {
         display: 'flex',
         flexDirection: 'column',
         width: 'calc(100vw - 56.25vh)',
+        overflow: 'hidden',
       }}
     >
       <div
