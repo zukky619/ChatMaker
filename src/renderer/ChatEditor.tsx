@@ -7,6 +7,7 @@ import { messagesIndexState } from './states/messageIndexState';
 import { chatState } from './states/chatState';
 import { peoplesState } from './states/peoplesState';
 import PeopleSelector from './modules/PeopleSelector';
+import styled from 'styled-components';
 
 import videoButtons from 'assets/video_buttons.png';
 
@@ -21,8 +22,31 @@ const ChatEditor = (props: Props) => {
   const [messageIndex, setMessageIndex] = useRecoilState(messagesIndexState);
   const [chatStatus, setChatStatus] = useRecoilState(chatState);
 
-  const click_handler = async () => {
-    console.log(thumnails);
+  const save_config = async () => {
+    window.electron.ipcRenderer.once('save-config', (arg) => {
+      // eslint-disable-next-line no-console
+      console.log(arg);
+    });
+    window.electron.ipcRenderer.sendMessage('save-config', {
+      messages: messages,
+      thumnails: thumnails,
+      peoples: peoples,
+      messageIndex: messageIndex,
+      chatStatus: chatStatus,
+    });
+  };
+
+  const load_config = async () => {
+    window.electron.ipcRenderer.once('load-config', (arg) => {
+      // eslint-disable-next-line no-console
+      console.log(arg);
+      setMessages(arg.messages);
+      setThumnails(arg.thumnails);
+      setPeoples(arg.peoples);
+      setMessageIndex(arg.messageIndex);
+      setChatStatus(arg.chatStatus);
+    });
+    window.electron.ipcRenderer.sendMessage('load-config', []);
   };
 
   const open_file = async () => {
@@ -87,6 +111,30 @@ const ChatEditor = (props: Props) => {
           gap: '1rem',
         }}
       >
+        <GenButton onClick={open_file}>Load Script</GenButton>
+        {/* <button
+          onClick={open_file}
+          style={{
+            // background: '#eee',
+            borderColor: '#eee',
+            borderRadius: '10px',
+            position: 'relative',
+            // display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            // margin: '0 auto',
+            // maxWidth: '160px',
+            padding: '10px 25px',
+            // fontFamily: 'Noto Sans Japanese',
+            // lineHeight: 1.8,
+            // textDecoration: 'none',
+            color: '#313131',
+            transition: '0.3s ease-in-out',
+            // fontWeight: 500,
+          }}
+        >
+          Open File
+        </button> */}
         <button
           onClick={props.start}
           style={{
@@ -125,7 +173,6 @@ const ChatEditor = (props: Props) => {
             }}
           />
         </button>
-        <button onClick={open_file}>ファイルを開く</button>
       </div>
       <div>
         <label>People Settings</label>
@@ -133,8 +180,48 @@ const ChatEditor = (props: Props) => {
       <div>
         <PeopleSelector peoples={peoples} />
       </div>
+      <div>
+        <label>General Settings</label>
+      </div>
+      <div style={{ display: 'flex', margin: '10px', gap: '10px' }}>
+        <GenButton onClick={save_config}>Save Settings</GenButton>
+        <GenButton onClick={load_config}>Load Settings</GenButton>
+        {/* <GenButton
+          onClick={() => {
+            let synthetizer = new SpeechSynthesisUtterance();
+            synthetizer.text = 'こんにちは';
+            synthetizer.lang = 'ja-JP';
+            synthetizer.voice = speechSynthesis.getVoices()[0];
+            speechSynthesis.speak(synthetizer);
+          }}
+        >
+          Clear Messages
+        </GenButton> */}
+      </div>
     </div>
   );
 };
 
 export default ChatEditor;
+
+const GenButton = styled.button`
+  background: #eee;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 160px;
+  padding: 10px 25px;
+  font-family: 'Noto Sans Japanese';
+  line-height: 1.8;
+  text-decoration: none;
+  color: #313131;
+  transition: 0.3s ease-in-out;
+  font-weight: 500;
+  &:hover {
+    background: #ddd;
+    border-color: #ddd;
+  }
+`;

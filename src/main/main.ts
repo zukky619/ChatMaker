@@ -25,6 +25,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
+// import Store from 'electron-store';
 
 import { MessageInfo } from '../renderer/types/messageInfo';
 
@@ -68,6 +69,33 @@ ipcMain.on('open-csv', async (event, arg) => {
   }
 
   event.reply('open-csv', results);
+});
+
+ipcMain.on('save-config', async (event, arg) => {
+  console.log('save-config: ', arg);
+  //存在しなければディレクトリを作成
+  if (!fs.existsSync(`${process.env.APPDATA}/chat-maker`)) {
+    fs.mkdirSync(`${process.env.APPDATA}/chat-maker`);
+  }
+  fs.writeFileSync(
+    `${process.env.APPDATA}/chat-maker/config.json`,
+    JSON.stringify(arg),
+  );
+
+  event.reply('save-config', 'success');
+});
+
+ipcMain.on('load-config', async (event, arg) => {
+  let config = {} as any;
+  if (fs.existsSync(`${process.env.APPDATA}/chat-maker/config.json`)) {
+    config = JSON.parse(
+      fs.readFileSync(`${process.env.APPDATA}/chat-maker/config.json`, {
+        encoding: 'utf8',
+      }),
+    );
+  }
+
+  event.reply('load-config', config);
 });
 
 if (process.env.NODE_ENV === 'production') {
